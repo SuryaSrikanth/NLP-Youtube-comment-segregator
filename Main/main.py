@@ -1,5 +1,5 @@
 videoID = 'hA6hldpSTF8'
-key = 'AIzaSyDX9PwoPwIu9698S33C2aGUxYC8usPh8vI'
+key = ''
 number_of_topics = 10
 passes = 5
 
