@@ -10,14 +10,14 @@ import re
 import pickle
 import googleapiclient.discovery
 import os
+import stopwords as sw
+
 videoID = 'hA6hldpSTF8'
-key = ''
+key = 'AIzaSyDX9PwoPwIu9698S33C2aGUxYC8usPh8vI'
 number_of_topics = 10
 passes = 5
-
-
-# nltk.download('wordnet')
-# nltk.download('punkt')
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
 
 
 def getComments(videoId, nextPageToken=None):
@@ -46,7 +46,8 @@ def preprocess(text):
     result = []
     for token in t:
         token = token.strip('.?,!<>:;[]{}!-"')
-        if token not in stopwords.words('english') and len(token) >= 3:
+        if token not in sw.stopwords_array and len(token) >= 3:
+            # if token not in stopwords.words('english') and len(token) >= 3:
             result.append(stemmer.stem(lemmatizer.lemmatize(token, pos='v')))
     return result
 
@@ -55,7 +56,8 @@ def get_topic(L):
     return max(L, key=lambda lis: lis[1])
 
 
-if __name__ == "__main__":
+def get_comments_and_topics(vidId):
+    videoID = vidId
     commentListResponce = getComments(videoID)
 
     comments = [comment['snippet']['topLevelComment']['snippet']
@@ -90,9 +92,6 @@ if __name__ == "__main__":
         if (spam_predictions[i] == 0) and (len(data['comments'][i]) != 0):
             filtered.append(data['comments'][i])
     filtered_data = pd.DataFrame(filtered, columns=['comments'])
-
-    stemmer = PorterStemmer()
-    lemmatizer = WordNetLemmatizer()
 
     filtered_data['processed'] = filtered_data.apply(
         lambda row: preprocess(row['comments']), axis=1)
@@ -136,8 +135,9 @@ if __name__ == "__main__":
         if len(DIC_topics[i]) == 0:
             DIC_topics[i] = ['Others']
 
-    print('\n-----------------------------------------------------\n')
-    print(DIC)
-    print('\n-----------------------------------------------------\n')
-    print(DIC_topics)
-    print('\n-----------------------------------------------------\n')
+    # print('\n-----------------------------------------------------\n')
+    # print(DIC)
+    # print('\n-----------------------------------------------------\n')
+    # print(DIC_topics)
+    # print('\n-----------------------------------------------------\n')
+    return {'dic': DIC, 'topics': DIC_topics}

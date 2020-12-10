@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <style>
+            table {
+                width:100%;
+            }
+                table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 15px;
+                text-align: left;
+            }
+            th {
+                background-color: rgba(95, 95, 95, 0.183);
+            }
+            .d {
+                margin: 10px auto;
+                display: grid;
+                column-gap: 10px;
+                grid-template-columns: 200px 150px;
+                align-content: center;
+                justify-content: center;
+            }
+            button {
+                padding: 5px;
+                justify-self: center;
+                align-self: center;
+            }
+            button:hover {cursor: pointer;}
+        </style>
+
+        <script>
+            function call() {
+                document.location.href = document.getElementById('id').value;
+            }
+        </script>
+    </head>
+    <body>
+        <div class="d">
+            <input id="id" type="text" placeholder="Video Id"/>
+            <button onclick="call();">Button</button>
+        </div>
+        <table style="width:100%">
+            {% if dic %}
+                <tr>
+                    <th>Comments</th>
+                    <th>Topics</th>
+                </tr>
+                {%for i in range(0, len)%}
+                        <tr>
+                            <td>
+                                {%for el in dic[i]%}
+                                    {{el}}<br>
+                                {%endfor%}
+                            </td>
+                            <td>
+                                {%for el in topics[i]%}
+                                    {{el}}<br>
+                                {%endfor%}
+                            </td>
+                        </tr>
+                {%endfor%}
+            {% endif %}
+        </table>
+    </body>
+</html>
