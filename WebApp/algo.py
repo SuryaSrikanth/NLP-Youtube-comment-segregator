@@ -13,19 +13,18 @@ import os
 import stopwords as sw
 
 videoID = 'hA6hldpSTF8'
-key = 'AIzaSyDX9PwoPwIu9698S33C2aGUxYC8usPh8vI'
 number_of_topics = 10
 passes = 5
 stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 
 
-def getComments(videoId, nextPageToken=None):
+def getComments(videoId, you_key, nextPageToken=None):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
     api_service_name = "youtube"
     api_version = "v3"
-    DEVELOPER_KEY = key
+    DEVELOPER_KEY = you_key
 
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey=DEVELOPER_KEY)
@@ -56,9 +55,10 @@ def get_topic(L):
     return max(L, key=lambda lis: lis[1])
 
 
-def get_comments_and_topics(vidId):
+def get_comments_and_topics(vidId, topic_count, youtube_key):
+    number_of_topics = topic_count
     videoID = vidId
-    commentListResponce = getComments(videoID)
+    commentListResponce = getComments(videoID, youtube_key)
 
     comments = [comment['snippet']['topLevelComment']['snippet']
                 ['textOriginal'] for comment in commentListResponce['items']]
@@ -135,9 +135,4 @@ def get_comments_and_topics(vidId):
         if len(DIC_topics[i]) == 0:
             DIC_topics[i] = ['Others']
 
-    # print('\n-----------------------------------------------------\n')
-    # print(DIC)
-    # print('\n-----------------------------------------------------\n')
-    # print(DIC_topics)
-    # print('\n-----------------------------------------------------\n')
     return {'dic': DIC, 'topics': DIC_topics}
