@@ -11,6 +11,7 @@ import pickle
 import googleapiclient.discovery
 import os
 import stopwords as sw
+import numpy as np
 
 videoID = 'hA6hldpSTF8'
 number_of_topics = 10
@@ -124,7 +125,10 @@ def get_comments_and_topics(vidId, topic_count, youtube_key):
         DIC_topics[i] = txt_topics
 
     for i in range(len(final['comments'])):
-        DIC[final['topic'][i]].append(final['comments'][i])
+        if np.isnan(final['topic'][i]):
+            continue
+        else:
+            DIC[final['topic'][i]].append(final['comments'][i])
 
     for i in DIC_topics.keys():
         DIC_topics[i] = " ".join(re.findall("[a-zA-Z]+", DIC_topics[i]))
